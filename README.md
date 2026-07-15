@@ -2,6 +2,8 @@
 
 Boilerplate pequeno, visual e **sem dependências externas**, preparado para uma demonstração ao vivo de **Spec-Driven Development (SDD)** usando o fluxo `/spec` do TRAE AI.
 
+Link da Live: [TaskFlow Lite — Demo SDD com TRAE AI](https://youtube.com/live/vRA8v1FMm_g)
+
 ## Feature da demonstração
 
 Implementar **filtros por status** na lista de tarefas:
