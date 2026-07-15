@@ -1,0 +1,16 @@
+{
+  "name": "taskflow-sdd-demo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Boilerplate sem dependências para uma demo de Spec-Driven Development com TRAE AI.",
+  "scripts": {
+    "dev": "node scripts/dev-server.mjs",
+    "test": "node --test",
+    "check": "node --check src/main.js && node --check src/domain/tasks.js && node --check src/infrastructure/taskStorage.js && node --check scripts/dev-server.mjs && node --check scripts/smoke.mjs && node --test",
+    "smoke": "node scripts/smoke.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

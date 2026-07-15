@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="TaskFlow Lite: aplicação de tarefas usada em uma demonstração de SDD com TRAE AI."
+    />
+    <title>TaskFlow Lite · TRAE SDD Demo</title>
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <div class="ambient ambient-one" aria-hidden="true"></div>
+    <div class="ambient ambient-two" aria-hidden="true"></div>
+
+    <div class="page-shell">
+      <header class="site-header">
+        <a class="brand" href="#main-content" aria-label="Ir para o conteúdo principal">
+          <span class="brand-mark" aria-hidden="true">T</span>
+          <span>
+            <strong>TRAE AI</strong>
+            <small>SDD LIVE DEMO</small>
+          </span>
+        </a>
+        <span class="status-pill"><span aria-hidden="true"></span> Boilerplate pronto</span>
+      </header>
+
+      <main id="main-content">
+        <section class="hero" aria-labelledby="page-title">
+          <div>
+            <p class="eyebrow">TASKFLOW LITE · ZERO DEPENDÊNCIAS</p>
+            <h1 id="page-title">Organize o trabalho.<br /><span>Entregue com clareza.</span></h1>
+            <p class="hero-copy">
+              Um app pequeno e confiável para demonstrar como uma especificação guia a IA da
+              intenção até uma feature validada.
+            </p>
+          </div>
+          <div class="hero-badge" aria-label="Fluxo da demonstração">
+            <span>IDEIA</span>
+            <b aria-hidden="true">→</b>
+            <span>/SPEC</span>
+            <b aria-hidden="true">→</b>
+            <span>CÓDIGO</span>
+          </div>
+        </section>
+
+        <section class="workspace" aria-label="Gerenciador de tarefas">
+          <section class="panel composer-panel" aria-labelledby="new-task-title">
+            <div class="section-heading">
+              <div>
+                <p class="section-kicker">CAPTURAR</p>
+                <h2 id="new-task-title">Nova tarefa</h2>
+              </div>
+              <span class="keyboard-hint">Enter ↵</span>
+            </div>
+
+            <form id="task-form" novalidate>
+              <label for="task-title">O que precisa ser feito?</label>
+              <div class="composer-row">
+                <input
+                  id="task-title"
+                  name="title"
+                  type="text"
+                  maxlength="120"
+                  autocomplete="off"
+                  placeholder="Ex.: Revisar critérios de aceite"
+                  aria-describedby="task-error"
+                />
+                <button class="primary-button" type="submit">Adicionar</button>
+              </div>
+              <p id="task-error" class="form-error" role="alert" aria-live="polite"></p>
+            </form>
+          </section>
+
+          <aside class="panel stats-panel" aria-labelledby="stats-title">
+            <div class="section-heading compact">
+              <div>
+                <p class="section-kicker">VISÃO RÁPIDA</p>
+                <h2 id="stats-title">Progresso</h2>
+              </div>
+            </div>
+            <dl class="stats-grid">
+              <div>
+                <dt>Total</dt>
+                <dd id="total-count">0</dd>
+              </div>
+              <div>
+                <dt>Pendentes</dt>
+                <dd id="pending-count">0</dd>
+              </div>
+              <div>
+                <dt>Concluídas</dt>
+                <dd id="completed-count">0</dd>
+              </div>
+            </dl>
+          </aside>
+
+          <section class="panel task-panel" aria-labelledby="task-list-title">
+            <div class="section-heading">
+              <div>
+                <p class="section-kicker">EXECUTAR</p>
+                <h2 id="task-list-title">Suas tarefas</h2>
+              </div>
+              <p id="task-summary" class="task-summary" aria-live="polite"></p>
+            </div>
+
+            <ul id="task-list" class="task-list" aria-label="Lista de tarefas"></ul>
+            <div id="empty-state" class="empty-state" hidden>
+              <span aria-hidden="true">✓</span>
+              <h3>Nenhuma tarefa por aqui</h3>
+              <p>Adicione uma tarefa para começar.</p>
+            </div>
+          </section>
+        </section>
+      </main>
+
+      <footer>
+        <span>TaskFlow Lite</span>
+        <span>Demo oficial · Spec-Driven Development</span>
+      </footer>
+    </div>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
