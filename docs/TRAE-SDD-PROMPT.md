@@ -18,7 +18,7 @@ Como pessoa usuária do TaskFlow Lite, quero filtrar minhas tarefas por status p
 ESCOPO FUNCIONAL OBRIGATÓRIO
 1. Exibir três opções de filtro: “Todas”, “Pendentes” e “Concluídas”.
 2. “Todas” deve ser o filtro inicial.
-3. Cada opção deve exibir a quantidade correspondente de tarefas.
+3. Cada opção deve exibir a quantidade correspondente calculada sobre o conjunto completo de tarefas, independentemente do filtro ativo; as contagens devem atualizar após criar, concluir, reabrir ou excluir uma tarefa.
 4. Ao selecionar um filtro, a lista deve mudar imediatamente, sem recarregar a página.
 5. A filtragem deve preservar a ordem atual das tarefas.
 6. Trocar o filtro não pode alterar, remover, reordenar nem persistir novamente as tarefas.
@@ -27,7 +27,7 @@ ESCOPO FUNCIONAL OBRIGATÓRIO
    - Todas: “Nenhuma tarefa por aqui”;
    - Pendentes: “Nenhuma tarefa pendente”;
    - Concluídas: “Nenhuma tarefa concluída”.
-9. O controle deve ser acessível por teclado e expor programaticamente qual opção está ativa, preferencialmente com botões e aria-pressed.
+9. O controle deve usar elementos `button`, funcionar por teclado e expor programaticamente qual opção está ativa por meio de `aria-pressed`.
 
 RESTRIÇÕES TÉCNICAS
 - Não adicionar bibliotecas, frameworks, ferramentas de build ou dependências npm.
