@@ -3,9 +3,11 @@ import assert from 'node:assert/strict';
 
 import {
   createTask,
+  filterTasksByStatus,
   getTaskStats,
   removeTask,
   sanitizeTasks,
+  TASK_STATUS_FILTERS,
   toggleTask,
 } from '../src/domain/tasks.js';
 
@@ -54,6 +56,58 @@ test('getTaskStats calcula total, pendentes e concluídas', () => {
     pending: 1,
     completed: 1,
   });
+});
+
+test('filterTasksByStatus retorna uma cópia rasa ao usar o filtro all', () => {
+  const result = filterTasksByStatus(TASKS, TASK_STATUS_FILTERS.ALL);
+
+  assert.deepEqual(result, TASKS);
+  assert.notEqual(result, TASKS);
+});
+
+test('filterTasksByStatus mantém apenas tarefas pendentes na ordem original', () => {
+  const tasks = [
+    TASKS[0],
+    { id: '3', title: 'Terceira', completed: false, createdAt: '2026-01-03T00:00:00.000Z' },
+    TASKS[1],
+  ];
+
+  const result = filterTasksByStatus(tasks, TASK_STATUS_FILTERS.PENDING);
+
+  assert.deepEqual(
+    result.map((task) => task.id),
+    ['1', '3'],
+  );
+});
+
+test('filterTasksByStatus mantém apenas tarefas concluídas na ordem original', () => {
+  const tasks = [
+    TASKS[1],
+    TASKS[0],
+    { id: '3', title: 'Terceira', completed: true, createdAt: '2026-01-03T00:00:00.000Z' },
+  ];
+
+  const result = filterTasksByStatus(tasks, TASK_STATUS_FILTERS.COMPLETED);
+
+  assert.deepEqual(
+    result.map((task) => task.id),
+    ['2', '3'],
+  );
+});
+
+test('filterTasksByStatus não modifica o array original', () => {
+  const originalSnapshot = structuredClone(TASKS);
+
+  filterTasksByStatus(TASKS, TASK_STATUS_FILTERS.COMPLETED);
+
+  assert.deepEqual(TASKS, originalSnapshot);
+});
+
+test('filterTasksByStatus trata filtro desconhecido com fallback para all', () => {
+  const result = filterTasksByStatus(TASKS, 'archived');
+
+  assert.deepEqual(result, TASKS);
+  assert.notEqual(result, TASKS);
 });
 
 test('sanitizeTasks ignora registros inválidos e normaliza campos', () => {

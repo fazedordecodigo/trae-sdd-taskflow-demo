@@ -1,4 +1,12 @@
-import { createTask, getTaskStats, removeTask, toggleTask } from './domain/tasks.js';
+import {
+  createTask,
+  filterTasksByStatus,
+  getTaskStats,
+  normalizeTaskStatusFilter,
+  removeTask,
+  TASK_STATUS_FILTERS,
+  toggleTask,
+} from './domain/tasks.js';
 import { createTaskStorage } from './infrastructure/taskStorage.js';
 
 const taskForm = document.querySelector('#task-form');
@@ -6,10 +14,18 @@ const taskTitleInput = document.querySelector('#task-title');
 const taskError = document.querySelector('#task-error');
 const taskList = document.querySelector('#task-list');
 const emptyState = document.querySelector('#empty-state');
+const emptyStateTitle = document.querySelector('#empty-state-title');
 const taskSummary = document.querySelector('#task-summary');
 const totalCount = document.querySelector('#total-count');
 const pendingCount = document.querySelector('#pending-count');
 const completedCount = document.querySelector('#completed-count');
+const taskStatusFilters = document.querySelector('#task-status-filters');
+const filterButtons = Array.from(document.querySelectorAll('[data-filter]'));
+const filterCountElements = {
+  [TASK_STATUS_FILTERS.ALL]: document.querySelector('[data-filter-count="all"]'),
+  [TASK_STATUS_FILTERS.PENDING]: document.querySelector('[data-filter-count="pending"]'),
+  [TASK_STATUS_FILTERS.COMPLETED]: document.querySelector('[data-filter-count="completed"]'),
+};
 
 const repository = createTaskStorage(window.localStorage);
 const starterTasks = [
@@ -31,6 +47,7 @@ const starterTasks = [
 ];
 
 let tasks = repository.load();
+let activeTaskFilter = TASK_STATUS_FILTERS.ALL;
 
 if (tasks.length === 0) {
   tasks = repository.save(starterTasks);
@@ -79,16 +96,44 @@ function createTaskElement(task) {
   return item;
 }
 
+function getEmptyStateTitle(filter) {
+  switch (filter) {
+    case TASK_STATUS_FILTERS.PENDING:
+      return 'Nenhuma tarefa pendente';
+    case TASK_STATUS_FILTERS.COMPLETED:
+      return 'Nenhuma tarefa concluída';
+    case TASK_STATUS_FILTERS.ALL:
+    default:
+      return 'Nenhuma tarefa por aqui';
+  }
+}
+
+function updateFilterControls(stats) {
+  filterCountElements[TASK_STATUS_FILTERS.ALL].textContent = String(stats.total);
+  filterCountElements[TASK_STATUS_FILTERS.PENDING].textContent = String(stats.pending);
+  filterCountElements[TASK_STATUS_FILTERS.COMPLETED].textContent = String(stats.completed);
+
+  filterButtons.forEach((button) => {
+    button.setAttribute(
+      'aria-pressed',
+      String(button.dataset.filter === activeTaskFilter),
+    );
+  });
+}
+
 function render() {
   const stats = getTaskStats(tasks);
+  const visibleTasks = filterTasksByStatus(tasks, activeTaskFilter);
 
   totalCount.textContent = String(stats.total);
   pendingCount.textContent = String(stats.pending);
   completedCount.textContent = String(stats.completed);
   taskSummary.textContent = `${stats.pending} ${stats.pending === 1 ? 'tarefa pendente' : 'tarefas pendentes'}`;
+  updateFilterControls(stats);
+  emptyStateTitle.textContent = getEmptyStateTitle(activeTaskFilter);
 
-  taskList.replaceChildren(...tasks.map(createTaskElement));
-  emptyState.hidden = tasks.length > 0;
+  taskList.replaceChildren(...visibleTasks.map(createTaskElement));
+  emptyState.hidden = visibleTasks.length > 0;
 }
 
 function persistAndRender(nextTasks) {
@@ -99,6 +144,37 @@ function persistAndRender(nextTasks) {
 function showTaskError(message = '') {
   taskError.textContent = message;
   taskTitleInput.setAttribute('aria-invalid', String(Boolean(message)));
+}
+
+function applyTaskFilter(nextFilter) {
+  const normalizedFilter = normalizeTaskStatusFilter(nextFilter);
+
+  if (normalizedFilter === activeTaskFilter) {
+    return;
+  }
+
+  activeTaskFilter = normalizedFilter;
+  render();
+}
+
+function isFilterActivationKey(event) {
+  return (
+    event.key === 'Enter'
+    || event.key === ' '
+    || event.key === 'Space'
+    || event.key === 'Spacebar'
+    || event.code === 'Enter'
+    || event.code === 'Space'
+  );
+}
+
+function handleFilterButtonKeydown(event) {
+  if (!isFilterActivationKey(event)) {
+    return;
+  }
+
+  event.preventDefault();
+  applyTaskFilter(event.currentTarget.dataset.filter);
 }
 
 taskForm.addEventListener('submit', (event) => {
@@ -116,6 +192,20 @@ taskForm.addEventListener('submit', (event) => {
 });
 
 taskTitleInput.addEventListener('input', () => showTaskError());
+
+taskStatusFilters.addEventListener('click', (event) => {
+  const filterButton = event.target.closest('[data-filter]');
+
+  if (!filterButton) {
+    return;
+  }
+
+  applyTaskFilter(filterButton.dataset.filter);
+});
+
+filterButtons.forEach((button) => {
+  button.addEventListener('keydown', handleFilterButtonKeydown);
+});
 
 taskList.addEventListener('change', (event) => {
   const checkbox = event.target.closest('.task-toggle');

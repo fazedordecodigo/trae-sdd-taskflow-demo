@@ -105,10 +105,45 @@
               <p id="task-summary" class="task-summary" aria-live="polite"></p>
             </div>
 
+            <div
+              id="task-status-filters"
+              class="task-filters"
+              role="group"
+              aria-label="Filtrar tarefas por status"
+            >
+              <button
+                class="task-filter"
+                type="button"
+                data-filter="all"
+                aria-pressed="true"
+              >
+                <span>Todas</span>
+                <span class="task-filter-count" data-filter-count="all">0</span>
+              </button>
+              <button
+                class="task-filter"
+                type="button"
+                data-filter="pending"
+                aria-pressed="false"
+              >
+                <span>Pendentes</span>
+                <span class="task-filter-count" data-filter-count="pending">0</span>
+              </button>
+              <button
+                class="task-filter"
+                type="button"
+                data-filter="completed"
+                aria-pressed="false"
+              >
+                <span>Concluídas</span>
+                <span class="task-filter-count" data-filter-count="completed">0</span>
+              </button>
+            </div>
+
             <ul id="task-list" class="task-list" aria-label="Lista de tarefas"></ul>
             <div id="empty-state" class="empty-state" hidden>
               <span aria-hidden="true">✓</span>
-              <h3>Nenhuma tarefa por aqui</h3>
+              <h3 id="empty-state-title">Nenhuma tarefa por aqui</h3>
               <p>Adicione uma tarefa para começar.</p>
             </div>
           </section>

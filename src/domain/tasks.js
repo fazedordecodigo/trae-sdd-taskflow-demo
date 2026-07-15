@@ -6,6 +6,12 @@
  * @property {string} createdAt
  */
 
+export const TASK_STATUS_FILTERS = Object.freeze({
+  ALL: 'all',
+  PENDING: 'pending',
+  COMPLETED: 'completed',
+});
+
 function generateId() {
   if (globalThis.crypto?.randomUUID) {
     return globalThis.crypto.randomUUID();
@@ -77,6 +83,37 @@ export function getTaskStats(tasks) {
     pending: tasks.length - completed,
     completed,
   };
+}
+
+/**
+ * @param {string} filter
+ * @returns {'all' | 'pending' | 'completed'}
+ */
+export function normalizeTaskStatusFilter(filter) {
+  return Object.values(TASK_STATUS_FILTERS).includes(filter)
+    ? filter
+    : TASK_STATUS_FILTERS.ALL;
+}
+
+/**
+ * Filtra tarefas por status sem modificar o array original nem reordenar itens.
+ *
+ * @param {Task[]} tasks
+ * @param {string} filter
+ * @returns {Task[]}
+ */
+export function filterTasksByStatus(tasks, filter = TASK_STATUS_FILTERS.ALL) {
+  const normalizedFilter = normalizeTaskStatusFilter(filter);
+
+  switch (normalizedFilter) {
+    case TASK_STATUS_FILTERS.PENDING:
+      return tasks.filter((task) => !task.completed);
+    case TASK_STATUS_FILTERS.COMPLETED:
+      return tasks.filter((task) => task.completed);
+    case TASK_STATUS_FILTERS.ALL:
+    default:
+      return tasks.slice();
+  }
 }
 
 /**

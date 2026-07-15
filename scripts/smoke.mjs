@@ -26,7 +26,16 @@ try {
   ]);
 
   assert.match(html, /TaskFlow Lite/);
+  assert.match(html, /id="task-status-filters"/);
+  assert.match(html, /data-filter="all"[\s\S]*aria-pressed="true"[\s\S]*data-filter-count="all"/);
+  assert.match(html, /data-filter="pending"[\s\S]*aria-pressed="false"[\s\S]*data-filter-count="pending"/);
+  assert.match(html, /data-filter="completed"[\s\S]*aria-pressed="false"[\s\S]*data-filter-count="completed"/);
   assert.match(script, /createTaskStorage/);
+  assert.match(script, /function isFilterActivationKey\(event\)/);
+  assert.match(script, /event\.currentTarget\.dataset\.filter/);
+  assert.match(script, /button\.addEventListener\('keydown', handleFilterButtonKeydown\)/);
+  assert.match(script, /event\.key === 'Spacebar'/);
+  assert.match(script, /event\.code === 'Space'/);
   assert.match(styles, /--accent: #3cd98e/);
 
   console.log('Smoke test aprovado: HTML, JavaScript e CSS foram servidos corretamente.');
